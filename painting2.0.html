@@ -17,27 +17,57 @@
         canvas.width = document.documentElement.clientWidth
         canvas.height = document.documentElement.clientHeight //获取文档的宽度。而不是ody的宽度
         let ctx = canvas.getContext('2d');
+        ctx.fillStyle = 'black';
+        ctx.strokeStyle = 'none'
+        ctx.lineWidth = 5;
+        ctx.lineCap = 'round'
+
+        function drawLine(x1, y1, x2, y2) {
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+
 
         let painting = false
+        let last
 
+        let isTouchDevice = 'ontouchstart' in document.documentElement;
+        if (isTouchDevice) {
+            canvas.ontouchstart = (e) => {
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+                last = [x, y]
+            }
+            canvas.ontouchmove = (e) => {
+                let x = e.touches[0].clientX
+                let y = e.touches[0].clientY
+                drawLine(last[0], last[1], x, y)
+                last[0] = x
+                last[1] = y
+            }
 
-        ctx.fillStyle = 'black';
+        } else { //画得快还是点，怎么连成一条线呢
 
-        canvas.onmousedown = () => {
-            painting = true
-        }
-        canvas.onmouseup = () => {
-            painting = false
-        }
+            canvas.onmousedown = (e) => {
+                painting = true
+                last = [e.clientX, e.clientY]
+            }
+            canvas.onmouseup = () => {
+                painting = false
+            }
 
-        canvas.onmousemove = (i) => {
-            if (painting === true) {
-                ctx.beginPath();
-                ctx.arc(i.clientX, i.clientY, 5, 0, 2 * Math.PI);
-                ctx.stroke();
-                ctx.fill();
-            } else {
-                console.log('doing nothing')
+            canvas.onmousemove = (i) => {
+                if (painting === true) {
+                    //每画一个点都会从0开始画线 drawLine(0, 0, i.clientX, i.clientY)
+                    drawLine(last[0], last[1], i.clientX, i.clientY)
+                    last[0] = i.clientX
+                    last[1] = i.clientY
+                } else {
+                    console.log('doing nothing')
+                }
             }
         }
     </script>
