@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>画板</title>
+    <link rel="stylesheet" href="painting.css">
+</head>
+
+<body>
+    <div id="canvas">
+        <script>
+            canvas.onclick = (e) => {
+                console.log(e.clientX)
+                console.log(e.clientY)
+
+                let div = document.createElement('div')
+                div.style.position = 'absolute'
+                div.style.left = e.clientX + 'px'
+                div.style.top = e.clientY + 'px'
+
+                div.style.width = '6px'
+                div.style.height = '6px'
+                div.style.marginTop = '-3px'
+                div.style.marginLeft = '-2px' //这两句是让鼠标出现在中间
+                div.style.borderRadius = '50%' //变成圆的
+                div.style.backgroundColor = 'black' //变成实心
+                canvas.appendChild(div) //使得div成为canvas元素的子元素，若没有这句话则创建到内存中
+            }
+            //console.log(e.clientX) 说明e为局部变量
+        </script>
+    </div>
+</body>
+
+</html>
